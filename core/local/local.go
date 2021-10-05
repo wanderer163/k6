@@ -347,7 +347,14 @@ func (e *ExecutionScheduler) Run(
 	executorsCount := len(e.executors)
 	logger := e.logger.WithField("phase", "local-execution-scheduler-run")
 	e.initProgress.Modify(pb.WithConstLeft("Run"))
-	defer e.state.MarkEnded()
+	var interrupted bool
+	defer func() {
+		if interrupted {
+			e.state.SetExecutionStatus(lib.ExecutionStatusInterrupted)
+		} else {
+			e.state.MarkEnded()
+		}
+	}()
 
 	if e.state.IsPaused() {
 		logger.Debug("Execution is paused, waiting for resume or interrupt...")
@@ -422,7 +429,7 @@ func (e *ExecutionScheduler) Run(
 		}
 	}
 	if err := executor.CancelReason(execCtx); err != nil {
-		// The execution was interupted
+		interrupted = true
 		return err
 	}
 	return firstErr
