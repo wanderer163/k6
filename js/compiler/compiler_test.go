@@ -33,6 +33,7 @@ import (
 	"go.k6.io/k6/lib/testutils"
 )
 
+//nolint:paralleltest
 func TestTransform(t *testing.T) {
 	c := New(testutils.NewLogger(t))
 	t.Run("blank", func(t *testing.T) {

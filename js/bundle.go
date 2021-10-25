@@ -83,7 +83,7 @@ func NewBundle(
 	// Compile sources, both ES5 and ES6 are supported.
 	code := string(src.Data)
 	c := compiler.New(logger)
-	c.COpts = compiler.CompilerOptions{
+	c.COpts = compiler.Options{
 		CompatibilityMode: compatMode,
 		Strict:            true,
 		SourceMapEnabled:  true,
@@ -137,7 +137,7 @@ func NewBundleFromArchive(
 	}
 
 	c := compiler.New(logger)
-	c.COpts = compiler.CompilerOptions{
+	c.COpts = compiler.Options{
 		Strict:            true,
 		CompatibilityMode: compatMode,
 		SourceMapEnabled:  true,

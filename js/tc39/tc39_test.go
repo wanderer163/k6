@@ -440,7 +440,7 @@ func (ctx *tc39TestCtx) compile(base, name string) (*goja.Program, error) {
 		str := string(b)
 		comp := ctx.compilerPool.Get()
 		defer ctx.compilerPool.Put(comp)
-		prg, _, err = comp.Compile(str, name, true, compiler.CompilerOptions{Strict: false, CompatibilityMode: lib.CompatibilityModeExtended})
+		prg, _, err = comp.Compile(str, name, true, compiler.Options{Strict: false, CompatibilityMode: lib.CompatibilityModeExtended})
 		if err != nil {
 			return nil, err
 		}
@@ -481,11 +481,11 @@ func (ctx *tc39TestCtx) runTC39Script(name, src string, includes []string, vm *g
 	var p *goja.Program
 	comp := ctx.compilerPool.Get()
 	defer ctx.compilerPool.Put(comp)
-	p, _, origErr = comp.Compile(src, name, true, compiler.CompilerOptions{Strict: false, CompatibilityMode: lib.CompatibilityModeBase})
+	p, _, origErr = comp.Compile(src, name, true, compiler.Options{Strict: false, CompatibilityMode: lib.CompatibilityModeBase})
 	if origErr != nil {
 		src, _, err = comp.Transform(src, name, nil)
 		if err == nil {
-			p, _, err = comp.Compile(src, name, true, compiler.CompilerOptions{Strict: false, CompatibilityMode: lib.CompatibilityModeBase})
+			p, _, err = comp.Compile(src, name, true, compiler.Options{Strict: false, CompatibilityMode: lib.CompatibilityModeBase})
 		}
 	} else {
 		err = origErr

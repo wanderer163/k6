@@ -93,7 +93,7 @@ const sourceMapURLFromBabel = "k6://internal-should-not-leak/file.map"
 type Compiler struct {
 	logger logrus.FieldLogger
 	babel  *babel
-	COpts  CompilerOptions // TODO change this, this is just way faster
+	COpts  Options // TODO change this, this is just way faster
 }
 
 // New returns a new Compiler
@@ -128,8 +128,8 @@ func (c *Compiler) Transform(src, filename string, inputSrcMap []byte) (code str
 	return
 }
 
-// CompilerOptions are options to the compiler ;)
-type CompilerOptions struct { // TODO maybe have the fields an exported and use the functional options pattern
+// Options are options to the compiler
+type Options struct { // TODO maybe have the fields an exported and use the functional options pattern
 	CompatibilityMode lib.CompatibilityMode
 	SourceMapEnabled  bool
 	// TODO maybe move only this in the compiler itself and leave ht rest as parameters to the Compile
@@ -138,12 +138,13 @@ type CompilerOptions struct { // TODO maybe have the fields an exported and use 
 }
 
 // Compile the program in the given CompatibilityMode, wrapping it between pre and post code
-func (c *Compiler) Compile(src, filename string, main bool, cOpts CompilerOptions) (*goja.Program, string, error) {
+func (c *Compiler) Compile(src, filename string, main bool, cOpts Options) (*goja.Program, string, error) {
 	return c.compileImpl(src, filename, main, cOpts, nil)
 }
 
+//nolint:cyclop
 func (c *Compiler) compileImpl(
-	src, filename string, main bool, cOpts CompilerOptions, srcmap []byte,
+	src, filename string, main bool, cOpts Options, srcmap []byte,
 ) (*goja.Program, string, error) {
 	code := src
 	if !main {
