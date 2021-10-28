@@ -80,5 +80,5 @@ func TestVUTags(t *testing.T) {
 	// json encoding
 	encoded, err := rt.RunString(`JSON.stringify(exec.vu.tags)`)
 	require.NoError(t, err)
-	assert.Equal(t, `{"vu":"101","custom-tag":"mytag"}`, encoded.String())
+	assert.JSONEq(t, `{"vu":"101","custom-tag":"mytag"}`, encoded.String())
 }
