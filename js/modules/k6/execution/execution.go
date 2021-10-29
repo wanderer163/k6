@@ -195,17 +195,14 @@ func (mi *ModuleInstance) newVUInfo() (*goja.Object, error) {
 
 	o, err := newInfoObj(rt, vi)
 	if err != nil {
-		return nil, err
+		return o, err
 	}
 
 	err = o.Set("tags", rt.NewDynamicObject(&tagsDynamicObject{
 		Runtime: rt,
 		Tags:    vuState.Tags,
 	}))
-	if err != nil {
-		return nil, err
-	}
-	return o, nil
+	return o, err
 }
 
 func newInfoObj(rt *goja.Runtime, props map[string]func() interface{}) (*goja.Object, error) {
