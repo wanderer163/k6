@@ -22,6 +22,8 @@ package execution
 
 import (
 	"errors"
+	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/dop251/goja"
@@ -234,6 +236,10 @@ func (o *tagsDynamicObject) Get(key string) goja.Value {
 
 // Set a property value for the key. Return true if succeed.
 func (o *tagsDynamicObject) Set(key string, val goja.Value) bool {
+	if val.ExportType().Kind() != reflect.String {
+		common.Throw(o.Runtime, fmt.Errorf("a string type is expected for setting a Tag value"))
+		return false
+	}
 	o.Tags.Set(key, val.String())
 	return true
 }

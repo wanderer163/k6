@@ -57,7 +57,7 @@ func TestVUTags(t *testing.T) {
 	require.NoError(t, rt.Set("exec", m.GetExports().Default))
 
 	// overwrite a system tag is allowed
-	_, err := rt.RunString(`exec.vu.tags["vu"] = 101`)
+	_, err := rt.RunString(`exec.vu.tags["vu"] = "101"`)
 	require.NoError(t, err)
 	val, err := rt.RunString(`exec.vu.tags["vu"]`)
 	require.NoError(t, err)
@@ -81,4 +81,8 @@ func TestVUTags(t *testing.T) {
 	encoded, err := rt.RunString(`JSON.stringify(exec.vu.tags)`)
 	require.NoError(t, err)
 	assert.JSONEq(t, `{"vu":"101","custom-tag":"mytag"}`, encoded.String())
+
+	// set a not-string value will raise an error
+	_, err = rt.RunString(`exec.vu.tags["vu"] = 42`)
+	assert.Contains(t, err.Error(), "string type is expected")
 }
